@@ -1,5 +1,5 @@
 # pocketbook-sdk
-PocketBook eReaders SDKs 
+PocketBook eReaders SDK collection
 
 ### Sources
 
