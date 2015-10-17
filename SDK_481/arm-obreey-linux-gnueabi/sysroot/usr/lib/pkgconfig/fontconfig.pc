@@ -1,0 +1,18 @@
+prefix=/usr
+exec_prefix=/usr
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+sysconfdir=/etc
+localstatedir=${prefix}/var
+PACKAGE=fontconfig
+confdir=@baseconfigdir@
+cachedir=/var/cache/fontconfig
+
+Name: Fontconfig
+Description: Font configuration and customization library
+Version: 2.11.0
+Requires:  freetype2
+Requires.private:  expat
+Libs: -L${libdir} -lfontconfig
+Libs.private: -L/home/igor/sources/buildroot-2014.05/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/lib -lexpat   -L/home/igor/sources/buildroot-2014.05/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/lib -lfreetype    
+Cflags: -I${includedir} -I/home/igor/sources/buildroot-2014.05/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/include   -I/home/igor/sources/buildroot-2014.05/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/include/freetype2 -I/home/igor/sources/buildroot-2014.05/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/include    

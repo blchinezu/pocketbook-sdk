@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=/usr
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: quota
+Description: Quota management library
+Version: 1.42.9
+Requires:
+Cflags: -I${includedir}/quota -I${includedir}
+Libs: -L${libdir} -lquota

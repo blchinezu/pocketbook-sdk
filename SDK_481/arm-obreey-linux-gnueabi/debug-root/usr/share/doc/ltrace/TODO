@@ -1,0 +1,36 @@
+* BFD:
+  + New executable formats
+  + Read list of libraries needed
+  + Read list of undefined symbols in executables
+  + Read list of exported symbols in libraries
+  + Read debugging info from executables/libraries
+* Automatically update list of syscalls?
+* Improve documentation
+* Improve -e/-x options (regexp?)
+* Improve -l option
+* Improve C++ name demangling
+* Display different argument types
+* Update /etc/ltrace.conf
+* More architectures, cleaner way to port
+* More operating systems (solaris?)
+* Option -I (inter-library calls)
+* Modify ARGTYPE_STRING[0-5] types so that they don't stop displaying chars when '\0' is seen
+* Get rid of EVENT_ARCH_SYSCALL and EVENT_ARCH_SYSRET
+* Cleaner way to use breakpoints:
+  + BP is placed in the PLT
+  + When control hits there:
+    - write down return address
+    - change return address with another one (handled by ltrace)
+    - get arguments...
+    - change the process' PC to be in the correct place,
+      without removing breakpoint
+  + When control hits one of our return addresses:
+    - get return value...
+    - change PC to the right place
+* To be able to work with processes sharing memory, we must:
+  + ptrace() every single thread
+  + place breakpoints only in places where the process control can continue
+    without having to remove it
+* List source dependencies in Makefile
+* Create different ltrace processes to trace different children
+* After a clone(), syscalls may be seen as sysrets in s390 (see trace.c:syscall_p())

@@ -1,0 +1,35 @@
+# -*- cmake -*-
+
+# - Find UsageStat library
+# This module defines
+# USAGE_STAT_INCLUDE_DIR, where to find json.h, etc.
+# USAGE_STAT_LIBRARIES, the libraries needed to use jsoncpp.
+# USAGE_STAT_FOUND, If false, do not try to use jsoncpp.
+
+FIND_PATH(USAGE_STAT_INCLUDE_DIR usage_stat_client.h
+/include
+/usr/include
+/usr/local/include
+)
+
+FIND_LIBRARY(USAGE_STAT_LIBRARIES
+  NAMES libusage_stat.so
+  PATHS /lib /usr/lib /usr/local/lib
+)
+
+IF (USAGE_STAT_LIBRARIES AND USAGE_STAT_INCLUDE_DIR)
+  SET(USAGE_STAT_FOUND "YES")
+ELSE (USAGE_STAT_LIBRARIES AND USAGE_STAT_INCLUDE_DIR)
+  SET(USAGE_STAT_FOUND "NO")
+ENDIF (USAGE_STAT_LIBRARIES AND USAGE_STAT_INCLUDE_DIR)
+
+
+IF (USAGE_STAT_FOUND)
+  IF (NOT USAGE_STAT_FIND_QUIETLY)
+    MESSAGE(STATUS "Found USAGE_STAT: ${USAGE_STAT_LIBRARIES}")
+  ENDIF (NOT USAGE_STAT_FIND_QUIETLY)
+ELSE (USAGE_STAT_FOUND)
+  IF (USAGE_STAT_FIND_REQUIRED)
+    MESSAGE(FATAL_ERROR "Could not find USAGE_STAT library")
+  ENDIF (USAGE_STAT_FIND_REQUIRED)
+ENDIF (USAGE_STAT_FOUND)

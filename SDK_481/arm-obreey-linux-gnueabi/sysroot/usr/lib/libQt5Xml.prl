@@ -1,0 +1,6 @@
+QMAKE_PRL_BUILD_DIR = /srv/build/EP.515-experimental/ebrmain_build/qtframework/build_arm/qtbase/src/xml
+QMAKE_PRO_INPUT = xml.pro
+QMAKE_PRL_TARGET = libQt5Xml.so.5.3.0
+QMAKE_PRL_CONFIG = lex yacc depend_includepath testcase_targets import_plugins import_qpa_plugin qt warn_on release link_prl incremental cross_compile shared qpa no_mocdepend release qt_no_framework linux unix posix gcc cross_compile compile_examples qpa largefile pcre prefix_build force_independent force_bootstrap create_prl link_prl prepare_docs qt_docs_targets no_private_qt_headers_warning QTDIR_build no_dll exceptions_off testcase_exceptions qt_example_installs warning_clean split_incpath need_fwd_pri qt_install_module qt_install_headers qmake_cache target_qt create_cmake compiler_supports_fpmath create_pc create_libtool explicitlib c++11 hide_symbols have_target dll thread moc resources
+QMAKE_PRL_VERSION = 5.3.0
+QMAKE_PRL_LIBS = -L/srv/build/EP.515-experimental/SDK-481/arm-obreey-linux-gnueabi/sysroot/usr/local/lib -L/srv/build/EP.515-experimental/SDK-481/arm-obreey-linux-gnueabi/sysroot/usr/lib -L/usr/lib -lQt5Core -lrt -lpthread 

@@ -1,0 +1,25 @@
+AR=
+ARCH_ENDIAN=arm-none-linux-gnueabi
+BINUTILS_DIR=binutils-2.17
+BINUTILS_EXTRA_CONFIG=
+BUILD=i686-pc-linux-gnu
+BUILD_DIR=/usr/src/redhat/BUILD/cross-mlib/build/gcc-4.1.2-glibc-2.5-nptl-3/arm-none-linux-gnueabi
+CC=
+GLIBC_ADDON_OPTIONS==nptl
+GLIBC_DIR=glibc-2.5
+GLIBC_EXTRA_CONFIG=--with-abi=aapcs-linux --with-arch=armv5te
+GCC_DIR=gcc-4.1.2
+GCC_EXTRA_CONFIG=
+GCC_LANGUAGES=c,c++
+KERNELCONFIG=
+LINUX_DIR=linux-2.6.20
+MLIB_NAMES=vfp|
+MLIB_CONFIG=|
+MLIB_CFLAGS=-mfloat-abi=softfp -mfpu=vfp|
+PREFIX=/opt/freescale/usr/local/gcc-4.1.2-glibc-2.5-nptl-3/arm-none-linux-gnueabi
+SRC_DIR=/usr/src/redhat/BUILD/cross-mlib/source
+TARGET=arm-none-linux-gnueabi
+TARGET_CFLAGS=-O -mabi=aapcs-linux -march=armv5te
+TC_BUILD=
+TC_HOST=x86-linux
+TOP_DIR=/usr/src/redhat/BUILD/cross-mlib

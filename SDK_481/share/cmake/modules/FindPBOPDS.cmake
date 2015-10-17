@@ -1,0 +1,42 @@
+# -*- cmake -*-
+
+# - FindPBOPDS library
+# Find the OPDS includes and library
+# This module defines
+# PBOPDS_INCLUDE_DIR, where to find json.h, etc.
+# PBOPDS_LIBRARIES, the libraries needed to use opds.
+# PBOPDS_FOUND, If false, do not try to use opds.
+
+FIND_PATH(PBOPDS_INCLUDE_DIR opds
+/include
+/usr/include
+/usr/local/include
+)
+
+FIND_LIBRARY(PBOPDS_APP_LIBRARY
+  NAMES libopds_app_lib.so
+  PATHS /lib /usr/lib /usr/local/lib /local/lib
+)
+
+FIND_LIBRARY(PBOPDS_DATA_LIBRARY
+  NAMES libopds_data.so
+  PATHS /lib /usr/lib /usr/local/lib /local/lib
+)
+
+IF(PBOPDS_APP_LIBRARY AND PBOPDS_DATA_LIBRARY AND PBOPDS_INCLUDE_DIR)
+  SET(PBOPDS_FOUND "YES")
+ELSE (PBOPDS_APP_LIBRARY AND PBOPDS_DATA_LIBRARY AND PBOPDS_INCLUDE_DIR)
+  SET(PBOPDS_FOUND "NO")
+ENDIF (PBOPDS_APP_LIBRARY AND PBOPDS_DATA_LIBRARY AND PBOPDS_INCLUDE_DIR)
+
+SET(PBOPDS_LIBRARIES ${PBOPDS_APP_LIBRARY} ${PBOPDS_DATA_LIBRARY} )
+
+IF (PBOPDS_FOUND)
+  IF (NOT PBOPDS_FIND_QUIETLY)
+    MESSAGE(STATUS "Found PB OPDS: ${PBOPDS_LIBRARIES}")
+  ENDIF (NOT PBOPDS_FIND_QUIETLY)
+ELSE (PBOPDS_FOUND)
+  IF (PBOPDS_FIND_REQUIRED)
+    MESSAGE(FATAL_ERROR "Could not find PB OPDS library")
+  ENDIF (PBOPDS_FIND_REQUIRED)
+ENDIF (PBOPDS_FOUND)

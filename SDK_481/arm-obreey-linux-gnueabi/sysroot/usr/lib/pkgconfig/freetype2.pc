@@ -1,0 +1,14 @@
+prefix="/usr"
+exec_prefix="/usr"
+libdir="/usr/lib"
+includedir="/usr/include/freetype2"
+
+Name: FreeType 2
+URL: http://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 17.2.11
+Requires:
+Requires.private: zlib
+Libs: -L${libdir} -lfreetype
+Libs.private: -lpng12 -lbz2 -L/home/igor/sources/buildroot-2014.05/output/host/usr/arm-buildroot-linux-gnueabi/sysroot/usr/lib -lpng12
+Cflags: -I${includedir}

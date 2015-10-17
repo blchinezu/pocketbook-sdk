@@ -1,0 +1,5 @@
+/* GNU ld script
+   Use the shared library, but some functions are only in
+   the static library, so try that secondarily.  */
+*** BUG in libc/scripts/output-format.sed *** elf32-bigarm,elf32-littlearm
+GROUP ( /lib/libc.so.6 /lib/libc_nonshared.a )

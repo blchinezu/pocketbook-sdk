@@ -1,0 +1,1 @@
+cmd_/tmp/fc622_headers/include/rdma/.install := perl /home/mike/ntx/linux-2.6.35.3/scripts/headers_install.pl /home/mike/ntx/linux-2.6.35.3/include/rdma /tmp/fc622_headers/include/rdma arm ib_user_mad.h; perl /home/mike/ntx/linux-2.6.35.3/scripts/headers_install.pl /tmp/fc622_bin/include/rdma /tmp/fc622_headers/include/rdma arm ; touch /tmp/fc622_headers/include/rdma/.install

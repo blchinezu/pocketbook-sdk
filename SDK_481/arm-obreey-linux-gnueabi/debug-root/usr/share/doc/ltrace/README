@@ -1,0 +1,92 @@
+                                ltrace
+
+                       A Dynamic Library Tracer
+
+         Copyright 1997-2009 Juan Cespedes <cespedes@debian.org>
+
+
+Contents
+--------
+ 0. Authors
+ 1. Introduction
+ 2. Where can I find it
+ 3. How does it work
+ 4. Where does it work
+ 5. Bugs
+ 6. License
+
+
+0. Authors
+----------
+
+ltrace has been developed mainly by Juan Cespedes <cespedes@debian.org>,
+but he has received many contributions from other people.  The following
+people have contributed significantly to this project:
+
+* César Sánchez <cesar.sanchez@imdea.org>
+* Santiago Romero <santiago.romero@imdea.org>
+* Pat Beirne <pbeirne@home.com> (ARM port)
+* Roman Hodek <Roman.Hodek@informatik.uni-erlangen.de> (m68k port)
+* Morten Eriksen <mortene@sim.no> (misc fixes)
+* Silvio Cesare <silvio@big.net.au> (ELF hacking)
+* Timothy Fesig <slate@us.ibm.com> (S390 port)
+* Anton Blanchard <anton@samba.org> (Powerpc port)
+* Jakub Jelinek <jakub@redhat.com> (SPARC port, support for libelf, many fixes)
+* Jakub Bogusz <qboosh@pld-linux.org> (alpha port)
+* SuSE (amd64 port)
+* Ian Wienand <ianw@gelato.unsw.edu.au> (IA64 port)
+* Eric Vaitl <evaitl@cisco.com> (mipsel port)
+* Petr Machata <pmachata@redhat.com> (misc fixes)
+
+1. Introduction
+---------------
+
+ltrace is a debugging tool, similar to strace, but it traces library
+calls instead of system calls.
+
+2. Where can I find it
+----------------------
+
+http://www.ltrace.org
+
+3. How does it work
+-------------------
+
+Using software breakpoints, just like gdb.
+
+4. Where does it work
+---------------------
+
+It works with ELF based Linux systems running on i386, m68k, S/390,
+ARM, PowerPC, PowerPC64, IA64, AMD64, SPARC and Alpha processors.
+
+It is part of at least Debian GNU/Linux, RedHat, SuSE, Mandrake...
+
+5. Bugs
+-------
+
+Too many to list here :).  If you like to submit a bug report, or a
+feature request, either do that against the Debian `ltrace' package,
+or mail ltrace-devel@lists.alioth.debian.org.
+
+This file is very incomplete and out-of-date.
+
+6. License
+----------
+
+    Copyright (C) 1997-2009 Juan Cespedes <cespedes@debian.org>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
