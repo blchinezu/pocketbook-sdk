@@ -1,4 +1,5 @@
-#ifndef INKINTERNAL_H #define INKINTERNAL_H
+#ifndef INKINTERNAL_H
+#define INKINTERNAL_H
 
 #include "inkview.h"
 #include "inkplatform.h"
