@@ -104,6 +104,10 @@ extern "C"
 #define USERMPD USERDATA "/bin/mpd.app"
 #define SYSTEMMPD SYSTEMDATA "/bin/mpd.app"
 #define OBREEYSYNC_APP_PATH SYSTEMDATA "/bin/obreeysync.app"
+#define READER_CONTROLLER_APP_PATH SYSTEMDATA "/bin/reader_controller.app"
+#define DB_SERVER_APP_PATH SYSTEMDATA "/bin/db-server.app"
+
+#define READER_APP_PATH SYSTEMDATA "/bin/eink-reader.app"
 #define OBREEYSYNC_V2_APP_PATH SYSTEMDATA "/bin/universal_sync.app"
 #define OBREEYSOCIAL_APP_PATH SYSTEMDATA "/bin/obreeysocial.app"
 #define USAGE_STAT_APP_PATH SYSTEMDATA "/bin/usage_stat.app"
@@ -123,7 +127,7 @@ extern "C"
 #define POCKETBOOKSIG USERDATA "/.pocketbook"
 #define USERSCANNER USERDATA "/bin/scanner.app"
 #define SYSTEMSCANNER SYSTEMDATA "/bin/scanner.app"
-#define FRONTLIGHT_APP  "front-light.app"
+#define FRONTLIGHT_APP	"front-light.app"
 #define USERFRONTLIGHT USERDATA "/bin/" FRONTLIGHT_APP
 #define SYSTEMSFRONTLIGHT SYSTEMDATA "/bin/" FRONTLIGHT_APP
 #define LASTOPENBOOKS STATEPATH "/lastopen.txt"
@@ -171,6 +175,8 @@ extern "C"
 
 #define DEVICE_VARIABLE_CFG SECUREDIR "/device.cfg"
 
+#define LOGO_APP_PATH SYSTEMDATA "/bin/power_off_logo.app"
+
 //#define DEFAULTFONT "LiberationSans"
 //#define DEFAULTFONTB "LiberationSans-Bold"
 //#define DEFAULTFONTI "LiberationSans-Italic"
@@ -206,7 +212,7 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define MSG_REG_CHECK         0x10d
 #define MSG_REG_WRITE         0x10e
 #define MSG_GETSERIAL         0x10f
-#define MSG_REBOOT        0x110
+#define MSG_REBOOT	      0x110
 #define MSG_REBOOT_AND_UPDATE 0x111
 #define MSG_TIMESTAMP         0x112
 #define MSG_UPDATESTATUS      0x113
@@ -220,7 +226,14 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define MSG_SETFRONTLIGHT     0x11b
 #define MSG_ACTUALIZEFRONTLIGHT 0x11c
 #define MSG_UPDATE_SERVICE_STATUSES    0x11d
-#define MSG_FACTORY_RESET   0x11e
+#define MSG_FACTORY_RESET	0x11e
+#define MSG_SETTIME_FROM_NTP 0x11f
+#define MSG_GET_IS_TIME_MONOTONIC_AFTER_LAST_NTP_SYNC 0x120
+#define MSG_GET_PARTNER_ID 0x121
+#define MSG_UPDATE_PARTNER_ID 0x122
+#define MSG_BAN_SUSPEND       0x123
+#define MSG_BACKUP	0x124
+#define MSG_RESTORE	0x125
 
 #define MSG_FBINFO            0x201
 #define MSG_ORIENTATION       0x202
@@ -248,11 +261,14 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define MSG_TASK_DELREQLISTENER 0x511
 #define MSG_TASK_GLOBALREQUEST  0x512
 #define MSG_TASK_SENDEVENTSYNC  0x513
-#define MSG_TASK_INITIALIZED    0x514
+#define MSG_TASK_INITIALIZED	0x514
 #define MSG_TASK_PREVIOUS_INSTACK   0x515
-#define MSG_TASK_COPY_ACTIVE_FB 0x516
+#define MSG_TASK_COPY_ACTIVE_FB	0x516
+#define MSG_TASK_SEND_REQUEST_NOWAIT      0x517
 
-#define MSG_START_SERVICES  0x600
+
+#define MSG_START_SERVICES	0x600
+#define MSG_LAST_OPEN_OPENED	0x601
 
 #define MSG_DEVICEKEY         0xad0be01
 #define MSG_RESETKEY          0xad0be02
@@ -338,11 +354,11 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define EVT_BT_TXCOMPLETE 172
 
 #define EVT_SYNTH_ENDED 200
-#define EVT_DIC_CLOSED  201
-#define EVT_SHOW_KEYBOARD 202
+#define EVT_DIC_CLOSED	201
+#define	EVT_SHOW_KEYBOARD 202
 
 #define EVT_TEXTCLEAR   209
-#define EVT_EXT_KB      210
+#define EVT_EXT_KB		210
 #define EVT_LETTER      211
 
 #define EVT_CALLBACK    212
@@ -355,82 +371,57 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define EVT_FRAME_ACTIVATED 218
 #define EVT_FRAME_DEACTIVATED 219
 #define EVT_READ_PROGRESS_CHANGED 220
+#define EVT_DUMP_BITMAPS_DEBUG_INFO 221
 
-#define EVT_NET_CONNECTED   256
+#define EVT_NET_CONNECTED	256
 #define EVT_NET_DISCONNECTED 257
 #define EVT_NET_FOUND_NEW_FW 260
+#define EVT_SYNTH_POSITION 261
 
 #define ISKEYEVENT(x) ((x)>=25 && (x)<=28)
 #define ISPOINTEREVENT(x) (((x)>=29 && (x)<=31) || ((x)>=34 && (x)<=35) || (x)==44 || (x)==39 || (x)==45)
 #define ISPANELEVENT(x) ((x)>=119 && (x) <= 132)
 
-#undef KEY_UP
-#undef KEY_DOWN
-#undef KEY_LEFT
-#undef KEY_RIGHT
-#undef KEY_OK
-#undef KEY_BACK
-#undef KEY_MENU
-#undef KEY_DELETE
-#undef KEY_MUSIC
-#undef KEY_POWER
-#undef KEY_PREV
-#undef KEY_NEXT
-#undef KEY_MINUS
-#undef KEY_PLUS
-#undef KEY_HOME
-#undef KEY_0
-#undef KEY_1
-#undef KEY_2
-#undef KEY_3
-#undef KEY_4
-#undef KEY_5
-#undef KEY_6
-#undef KEY_7
-#undef KEY_8
-#undef KEY_9
-/* added support for EP34 keys */
-#undef KEY_ZOOMIN
-#undef KEY_ZOOMOUT
 
-#define KEY_POWER  0x01
-#define KEY_DELETE 0x08
-#define KEY_OK     0x0a
-#define KEY_UP     0x11
-#define KEY_DOWN   0x12
-#define KEY_LEFT   0x13
-#define KEY_RIGHT  0x14
-#define KEY_MINUS  0x15
-#define KEY_PLUS   0x16
-#define KEY_MENU   0x17
-#define KEY_PREV   0x18
-#define KEY_NEXT   0x19
-#define KEY_HOME   0x1a
-#define KEY_BACK   0x1b
-#define KEY_PREV2  0x1c
-#define KEY_NEXT2  0x1d
-#define KEY_MUSIC  0x1e
-#define KEY_COVEROPEN   0x02
-#define KEY_COVERCLOSE  0x03
+#define IV_KEY_POWER  0x01
+#define IV_KEY_DELETE 0x08
+#define IV_KEY_OK     0x0a
+#define IV_KEY_UP     0x11
+#define IV_KEY_DOWN   0x12
+#define IV_KEY_LEFT   0x13
+#define IV_KEY_RIGHT  0x14
+#define IV_KEY_MINUS  0x15
+#define IV_KEY_PLUS   0x16
+#define IV_KEY_MENU   0x17
+#define IV_KEY_PREV   0x18
+#define IV_KEY_NEXT   0x19
+#define IV_KEY_HOME   0x1a
+#define IV_KEY_BACK   0x1b
+#define IV_KEY_PREV2  0x1c
+#define IV_KEY_NEXT2  0x1d
+#define IV_KEY_MUSIC  0x1e
+#define IV_KEY_COVEROPEN	0x02
+#define IV_KEY_COVERCLOSE	0x03
 /* added support for EP34 keys */
-#define KEY_ZOOMOUT 0x06
-#define KEY_ZOOMIN  0x07
+#define IV_KEY_ZOOMOUT 0x06
+#define IV_KEY_ZOOMIN  0x07
+#define IV_KEY_MENU_POWER 0x04
 
 /* KEYBOARD STATE KEYS */
-#define KEY_SHIFT 0x0E
-#define KEY_LANGUAGECHANGE 0x0F
-#define KEY_KEYBOARDCLOSE 0x10
+#define IV_KEY_SHIFT 0x0E
+#define IV_KEY_LANGUAGECHANGE 0x0F
+#define IV_KEY_KEYBOARDCLOSE 0x10
 
-#define KEY_0 0x30
-#define KEY_1 0x31
-#define KEY_2 0x32
-#define KEY_3 0x33
-#define KEY_4 0x34
-#define KEY_5 0x35
-#define KEY_6 0x36
-#define KEY_7 0x37
-#define KEY_8 0x38
-#define KEY_9 0x39
+#define IV_KEY_0 0x30
+#define IV_KEY_1 0x31
+#define IV_KEY_2 0x32
+#define IV_KEY_3 0x33
+#define IV_KEY_4 0x34
+#define IV_KEY_5 0x35
+#define IV_KEY_6 0x36
+#define IV_KEY_7 0x37
+#define IV_KEY_8 0x38
+#define IV_KEY_9 0x39
 
 #define KEYMAPPING_GLOBAL 0
 #define KEYMAPPING_TXT    1
@@ -486,6 +477,7 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define KBD_CUSTOM_ENTER_KEY       0x100000
 #define KBD_MARKED_ENTER_KEY       0x200000
 #define KBD_PASSWORD_WIFI          0x400000
+#define KBD_NEXT                   0x800000
 
 
 #define ICON_INFORMATION 1
@@ -583,10 +575,10 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define TASK_BACKGROUND ((TASK_HIDDEN | TASK_NOUPDATEONFOCUS | TASK_OUTOFSTACK))
 #define TASK_NOHANDLER ((TASK_BACKGROUND | TASK_DONTSENDTASKMSG)) //use if program has not main hander. For background processes like services.
 
-#define RQL_ADD     1
-#define RQL_REPLACE 2
-#define RQL_ADDIFNONE   3
-#define RQL_REMOVE  4
+#define RQL_ADD		1
+#define RQL_REPLACE	2
+#define RQL_ADDIFNONE	3
+#define RQL_REMOVE	4
 
 #define REQ_KEYLOCK     65
 #define REQ_MAINMENU    66
@@ -607,14 +599,17 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define REQ_FLIPTASK    81
 #define REQ_KILLTASK    82
 #define REQ_POWEROFF    83
-#define REQ_OPENBOOK    84
-#define REQ_BOOKSTATE   85
-#define REQ_BOOKOPENED  86 //copy from fc622-mt
-#define REQ_HEADCHNG    87
-#define REQ_OPENBOOK2   88
-#define REQ_FRONTLIGHT  89
-#define REQ_KEYUNLOCK   90
-#define REQ_HOURGLASS   91
+#define REQ_OPENBOOK	84
+#define REQ_BOOKSTATE	85
+#define REQ_BOOKOPENED	86 //copy from fc622-mt
+#define REQ_HEADCHNG	87
+#define REQ_OPENBOOK2	88
+#define REQ_FRONTLIGHT	89
+#define REQ_KEYUNLOCK	90
+#define REQ_HOURGLASS	91
+#define REQ_MESSAGEBOX  92
+#define REQ_KEYHARDLOCK 93
+#define REQ_PB_CLOUD_NEW_POSITION 94
 
 #define ALIGN_LEFT 1
 #define ALIGN_CENTER 2
@@ -655,7 +650,7 @@ extern const char * OBREEY_SOCIAL_COOKIES_PATH;
 #define SYMBOL_PAUSE  6
 #define SYMBOL_BULLET 7
 #define ARROW_UPDOWN  8
-#define SYMBOL_MENU   9
+#define SYMBOL_MENU	  9
 
 #define IMAGE_BW    1
 #define IMAGE_GRAY2 2
@@ -720,66 +715,67 @@ TTS_PAUSED
 #define OB_SOFTUPDATE  0x10
 #define OB_NOHOURGLASS 0x20
 
-#define NET_BLUETOOTH   0x0001
-#define NET_WIFI    0x0002
-#define NET_CDMA3G  0x0004
-#define NET_BTREADY 0x0100
-#define NET_WIFIREADY   0x0200
-#define NET_CDMA3GREADY 0x0400
-#define NET_CONNECTED   0x0f00
+#define NET_BLUETOOTH	0x0001
+#define NET_WIFI	0x0002
+#define NET_CDMA3G	0x0004
+#define NET_BTREADY	0x0100
+#define NET_WIFIREADY	0x0200
+#define NET_CDMA3GREADY	0x0400
+#define NET_CONNECTED	0x0f00
 
-#define CONN_GPRS   1
-#define CONN_WIFI   2
-#define CONN_CDMA3G 3
+#define CONN_GPRS	1
+#define CONN_WIFI	2
+#define CONN_CDMA3G	3
 
 #define BLUETOOTH_OFF 0
 #define BLUETOOTH_HIDDEN 1
 #define BLUETOOTH_VISIBLE 2
 
-#define NET_OK      0
-#define NET_CONNECT 1
-#define NET_TRANSFER    2
+#define NET_OK		0
+#define NET_CONNECT	1
+#define NET_TRANSFER	2
 
-#define NET_FAIL    -11
-#define NET_ABORTED -12
-#define NET_EINIT   -13
-#define NET_EWRONGID    -14
-#define NET_ENETWORK    -15
-#define NET_EFILE   -16
-#define NET_EPIPE   -17
-#define NET_ETHREAD -18
-#define NET_EPROTO  -19
-#define NET_EURL    -20
-#define NET_ERESOLVE    -21
-#define NET_ECONNECT    -22
-#define NET_EACCESS -23
-#define NET_ENOTFOUND   -24
-#define NET_EPARTIAL    -25
-#define NET_EBROKEN -26
-#define NET_ETIMEOUT    -27
-#define NET_ESERVER -28
-#define NET_EHTTP   -29
-#define NET_EHARDWARE   -30
-#define NET_ENOTCONF    -31
-#define NET_EBADCONF    -32
-#define NET_ENODEVICE   -33
-#define NET_EPPP    -34
-#define NET_EDISABLED   -35
-#define NET_EDHCP   -36
-#define NET_EWRONGKEY   -37
+#define NET_FAIL	-11
+#define NET_ABORTED	-12
+#define NET_EINIT	-13
+#define NET_EWRONGID	-14
+#define NET_ENETWORK	-15
+#define NET_EFILE	-16
+#define NET_EPIPE	-17
+#define NET_ETHREAD	-18
+#define NET_EPROTO	-19
+#define NET_EURL	-20
+#define NET_ERESOLVE	-21
+#define NET_ECONNECT	-22
+#define NET_EACCESS	-23
+#define NET_ENOTFOUND	-24
+#define NET_EPARTIAL	-25
+#define NET_EBROKEN	-26
+#define NET_ETIMEOUT	-27
+#define NET_ESERVER	-28
+#define NET_EHTTP	-29
+#define NET_EHARDWARE	-30
+#define NET_ENOTCONF	-31
+#define NET_EBADCONF	-32
+#define NET_ENODEVICE	-33
+#define NET_EPPP	-34
+#define NET_EDISABLED	-35
+#define NET_EDHCP	-36
+#define NET_EWRONGKEY	-37
+#define NET_EAUTH	-38
 
 typedef enum {
-    NO = 0,
-    WEP,
-    WPAEAP,
-    WPAPSK,
+	NO = 0,
+	WEP,
+	WPAEAP,
+	WPAPSK,
 } WIFI_SECURITY;
 
 typedef enum {
-    NET_STATE_UNKNOWN = -1,
-    DISCONNECTED = 0,
-    CONNECTING,
-    CONNECTED,
+	NET_STATE_UNKNOWN = -1,
+	DISCONNECTED = 0,
+	CONNECTING,
+	CONNECTED,
 } NET_STATE;
 
 #define GSENSOR_OFF 0
@@ -819,22 +815,22 @@ typedef enum
 
 typedef enum
 {
-    SFLAGS_NONE             = 0x00,
-    SFLAGS_LEFT             = 0x01,
-    SFLAGS_RIGHT            = 0x02,
-    SFLAGS_RIGHT_LEFT       = SFLAGS_RIGHT | SFLAGS_LEFT,                           // 0x03
-    SFLAGS_UP               = 0x04,
-    SFLAGS_UP_LEFT          = SFLAGS_UP | SFLAGS_LEFT,                              // 0x05
-    SFLAGS_UP_RIGHT         = SFLAGS_UP | SFLAGS_RIGHT,                             // 0x06
-    SFLAGS_UP_RIGHT_LEFT    = SFLAGS_UP | SFLAGS_RIGHT | SFLAGS_LEFT,               // 0x07
-    SFLAGS_DOWN             = 8,
-    SFLAGS_DOWN_LEFT        = SFLAGS_DOWN | SFLAGS_LEFT,                            // 0x09
-    SFLAGS_DOWN_RIGHT       = SFLAGS_DOWN | SFLAGS_RIGHT,                           // 0x0a
-    SFLAGS_DOWN_RIGHT_LEFT  = SFLAGS_DOWN | SFLAGS_RIGHT | SFLAGS_LEFT,             // 0x0b
-    SFLAGS_DOWN_UP          = SFLAGS_DOWN | SFLAGS_UP,                              // 0x0c
-    SFLAGS_DOWN_UP_LEFT     = SFLAGS_DOWN | SFLAGS_UP | SFLAGS_LEFT,                // 0x0d
-    SFLAGS_DOWN_UP_RIGHT    = SFLAGS_DOWN | SFLAGS_UP | SFLAGS_RIGHT,               // 0x0e
-    SFLAGS_ALL              = SFLAGS_LEFT | SFLAGS_RIGHT | SFLAGS_UP | SFLAGS_DOWN, // 0x0f
+	SFLAGS_NONE				= 0x00,
+	SFLAGS_LEFT				= 0x01,
+	SFLAGS_RIGHT			= 0x02,
+	SFLAGS_RIGHT_LEFT		= SFLAGS_RIGHT | SFLAGS_LEFT,							// 0x03
+	SFLAGS_UP				= 0x04,
+	SFLAGS_UP_LEFT			= SFLAGS_UP | SFLAGS_LEFT,								// 0x05
+	SFLAGS_UP_RIGHT			= SFLAGS_UP | SFLAGS_RIGHT,								// 0x06
+	SFLAGS_UP_RIGHT_LEFT	= SFLAGS_UP | SFLAGS_RIGHT | SFLAGS_LEFT,				// 0x07
+	SFLAGS_DOWN				= 8,
+	SFLAGS_DOWN_LEFT		= SFLAGS_DOWN | SFLAGS_LEFT,							// 0x09
+	SFLAGS_DOWN_RIGHT		= SFLAGS_DOWN | SFLAGS_RIGHT,							// 0x0a
+	SFLAGS_DOWN_RIGHT_LEFT	= SFLAGS_DOWN | SFLAGS_RIGHT | SFLAGS_LEFT,				// 0x0b
+	SFLAGS_DOWN_UP			= SFLAGS_DOWN | SFLAGS_UP,								// 0x0c
+	SFLAGS_DOWN_UP_LEFT		= SFLAGS_DOWN | SFLAGS_UP | SFLAGS_LEFT,				// 0x0d
+	SFLAGS_DOWN_UP_RIGHT	= SFLAGS_DOWN | SFLAGS_UP | SFLAGS_RIGHT,				// 0x0e
+	SFLAGS_ALL				= SFLAGS_LEFT | SFLAGS_RIGHT | SFLAGS_UP | SFLAGS_DOWN,	// 0x0f
 } SideFlags;
 
 
@@ -844,12 +840,12 @@ typedef enum
   */
 typedef enum
 {
-    PANEL_DISABLED          = 0,          /**< PANEL is completely off */
-    PANEL_ENABLED           = 1 << 1,     /**< PANEL is on, if any other flag is set panel is treated as active */
-    PANEL_EVENT_NO_HANDLING = 1 << 2      /**< PANEL is on and could be drawn but it does not handle pointer events, 
-                                            * it is good to use in pair with SetManualPanelUpdates(int enable, iv_panelupdateshandler handler) 
-                                            * @see SetManualPanelUpdates(int enable, iv_panelupdateshandler handler) 
-                                            */
+	PANEL_DISABLED          = 0,          /**< PANEL is completely off */
+	PANEL_ENABLED           = 1 << 1,     /**< PANEL is on, if any other flag is set panel is treated as active */
+	PANEL_EVENT_NO_HANDLING = 1 << 2      /**< PANEL is on and could be drawn but it does not handle pointer events, 
+	                                        * it is good to use in pair with SetManualPanelUpdates(int enable, iv_panelupdateshandler handler) 
+	                                        * @see SetManualPanelUpdates(int enable, iv_panelupdateshandler handler) 
+	                                        */
 } PANEL_FLAGS;
 char *iv_get_default_font(FONT_TYPE fonttype);
 
@@ -895,6 +891,7 @@ typedef void (*iv_timerprocEx)(void* context);
 
 typedef void (*iv_menuhandler)(int index);
 typedef void (*iv_keyboardhandler)(char *text);
+typedef void (*iv_keyboardhandlerex)(char *text, void* data);
 typedef void (*iv_dialoghandler)(int button);
 typedef void (*iv_timeedithandler)(long newtime);
 typedef void (*iv_fontselecthandler)(char *fontr, char *fontb, char *fonti, char *fontbi);
@@ -921,9 +918,9 @@ typedef void (*iv_panelupdateshandler)(int x, int y, int w, int h);
 
 struct TransparentDefinition
 {
-    char m_TRANSPARENT_MATRIX[256];
-    int m_isInitTransparentMatrix;
-    int m_PercentOfTransparent;
+	char m_TRANSPARENT_MATRIX[256];
+	int m_isInitTransparentMatrix;
+	int	m_PercentOfTransparent;
 };
 
 typedef struct TransparentDefinition TransparentHandle;
@@ -1075,6 +1072,7 @@ typedef struct icontext_menu_s {
     short enable_aura;
     short use_own_font;
     short update_after_close;
+    short only_choise;
 } icontext_menu;
 
 // Struct for caption options
@@ -1231,7 +1229,7 @@ typedef struct bookinfo_s {
     char *title;
     char *author;
     char *series;
-    int  numinseries;
+    int	 numinseries;
     char *genre[10];
     ibitmap *icon;
     int year;
@@ -1239,9 +1237,9 @@ typedef struct bookinfo_s {
     time_t ctime;
     char* isbn;
     char* meta_id;
-    char* first_author;
-    int drm;
-    char *annotation;
+	char* first_author;
+	int drm;
+	char *annotation;
     char *lang;
     char *publisher;
     char *identifiers;
@@ -1377,11 +1375,11 @@ typedef struct taskinfo_s {
 
 //input_dev_e is touch 'devtype'; describes a input device.
 enum input_dev_e {
-    UNKNOWN = 0,
-    CAPTOUCH,
-    DIGITIZER,
+	UNKNOWN = 0,
+	CAPTOUCH,
+	DIGITIZER,
 
-    MAX_INPUT_DEV,
+	MAX_INPUT_DEV,
 };
 
 typedef struct iv_mtinfo_s {
@@ -1397,20 +1395,20 @@ typedef struct iv_mtinfo_s {
 
 //scaned wifi ap information
 typedef struct apinfo_s {
-    char ssid[36];
-    int mode;
-    int channel;
-    int security;
-    int quality;
-    int level;
-    int noise;
-    unsigned char mac[8];
-    time_t timestamp; //the last scanned time
+	char ssid[36];
+	int mode;
+	int channel;
+	WIFI_SECURITY security;
+	int quality;
+	int level;
+	int noise;
+	unsigned char mac[8];
+	time_t timestamp; //the last scanned time
 } wifiapinfo;
 
 typedef struct wifi_ap_list_s {
-    int ap_quantity;
-    wifiapinfo apinfo[];
+	int ap_quantity;
+	wifiapinfo apinfo[];
 } iv_wifi_ap_list;
 
 typedef iv_wlist* (*pointer_to_word_hand_t)(int x, int y, int forward);
@@ -1421,8 +1419,8 @@ typedef iv_wlist* (*pointer_to_word_hand_t)(int x, int y, int forward);
 typedef union { char intr[8]; char addr[16]; char hw_addr[18]; } network_interface;
 
 typedef struct network_interface_array_s {
-    unsigned int count;
-    network_interface net_int[];
+	unsigned int count;
+	network_interface net_int[];
 }network_interface_array;
 
 /*
@@ -1431,67 +1429,67 @@ typedef struct network_interface_array_s {
 #define MAX_BT_SERVICE_USER 16
 
 enum bt_service_e {
-    BT_UNKNOWN = 0,
-    BT_AUTH,
-    BT_OBEX,
-    BT_SECOND_SCREEN
+	BT_UNKNOWN = 0,
+	BT_AUTH,
+	BT_OBEX,
+	BT_SECOND_SCREEN
 };
 
 enum bt_service_state_e {
-    BT_SERVICE_ACTIVE = 0,
-    BT_SERVICE_CANCEL,
-    BT_SERVICE_ERROR
+	BT_SERVICE_ACTIVE = 0,
+	BT_SERVICE_CANCEL,
+	BT_SERVICE_ERROR
 };
 
 enum obex_status_e {
-    OBEX_UNKNOWN = 0,
-    OBEX_ERROR,
-    OBEX_REQUEST_AUTH,
-    OBEX_REQUEST_AUTH_DONE,
-    OBEX_TRANSFERRING,
-    OBEX_DONE
+	OBEX_UNKNOWN = 0,
+	OBEX_ERROR,
+	OBEX_REQUEST_AUTH,
+	OBEX_REQUEST_AUTH_DONE,
+	OBEX_TRANSFERRING,
+	OBEX_DONE
 };
 
 struct obex_service_s {
-    enum obex_status_e status;
-    int auth;
+	enum obex_status_e status;
+	int auth;
 
-    long filesize;
-    long transferred;
+	long filesize;
+	long transferred;
 
-    char name[128];
-    char path[256];
-    char description[128];
-    char mimetype[64];
+	char name[128];
+	char path[256];
+	char description[128];
+	char mimetype[64];
 };
 
 typedef struct bt_service_obj_s {
-    int id;
-    enum bt_service_e service;
-    enum bt_service_state_e state;
-    int lock;
-    pid_t users[MAX_BT_SERVICE_USER];
-    union {
-        struct obex_service_s obex;
-        char service_data[1024];
-    };
+	int id;
+	enum bt_service_e service;
+	enum bt_service_state_e state;
+	int lock;
+	pid_t users[MAX_BT_SERVICE_USER];
+	union {
+		struct obex_service_s obex;
+		char service_data[1024];
+	};
 } bt_service_obj;
 
 /*
  * struct which consist main information about any network interface.
  */
 typedef struct {
-    network_interface ip_addr; //ip address of interface
-    network_interface mask; //mask
-    network_interface br_addr; //broadcast address
-    network_interface hw_addr; //hardware address (MAC)
+	network_interface ip_addr; //ip address of interface
+	network_interface mask; //mask
+	network_interface br_addr; //broadcast address
+	network_interface hw_addr; //hardware address (MAC)
 } network_interface_info;
 
 typedef struct icolor_map_s {
 
-    int *from_color;
-    int *to_color;
-    int size;
+	int *from_color;
+	int *to_color;
+	int size;
 
 } icolor_map;
 
@@ -1501,10 +1499,10 @@ typedef struct icolor_map_s {
   */
 typedef enum
 {
-    APPLICATION_READER                 = 0,      /**< application is a reader, affects behavior of panel
-                                                   * for proper work, set this attribute before first acces to panel API
-                                                   */
-    APPLICATION_ATTRIBUTE_MAX          = 31      /**< maximal value of the attribute */
+	APPLICATION_READER                 = 0,      /**< application is a reader, affects behavior of panel
+	                                               * for proper work, set this attribute before first acces to panel API
+	                                               */
+	APPLICATION_ATTRIBUTE_MAX          = 31      /**< maximal value of the attribute */
 } APPLICATION_ATTRIBUTE;
 
 void OpenScreen();
@@ -1621,6 +1619,7 @@ void SetTransparentColor(ibitmap **bmp, int color);
 ibitmap* CopyBitmapDepth4To8(const ibitmap* bmp);
 ibitmap* CopyBitmapDepth8To4(const ibitmap* bmp);
 void MoveBitmap(ibitmap* bmp, int offset);
+void MoveBitmapRight(ibitmap* bm, int offset);
 
 /**
  * @brief BitmapStretchCopy function copies a part of an other bitmap to the newly created bitmap
@@ -1644,6 +1643,17 @@ void MirrorBitmap(ibitmap *bm, int m);
 
 char **EnumFonts();
 char **EnumFontsFromDirectory(const char *directory1, const char *directory2);
+
+typedef struct FontForSort_s {
+    char* name;
+    int flags;
+    char* font;
+} FontForSort;
+
+FontForSort* EnumFontsEx();
+FontForSort* EnumFontsFromDirectoryEx(const char * directory1, const char * directory2);
+void FreeFontsForSort(FontForSort* fonts);
+
 ifont *OpenFont(const char *name, int size, int aa);
 void CloseFont(ifont *f);
 void SetFont(const ifont *font, int color);
@@ -1703,6 +1713,9 @@ void ProcessEventLoop();
 void FlushEvents();
 char *iv_evttype(int type);
 char IsAnyEvents();
+void PrepareForLoop(iv_handler hproc);
+void ClearOnExit();
+
 // Timer functions
 
 void SetHardTimer(const char *name, iv_timerproc tproc, int ms);
@@ -1739,9 +1752,12 @@ void LoadKeyboard(const char *kbdlang);
  */
 int GetKeyboardFlags();
 void OpenKeyboard(const char *title, char *buffer, int maxlen, int flags, iv_keyboardhandler hproc);
+void OpenKeyboardEx(const char *title, char *buffer, int maxlen, int flags, iv_keyboardhandlerex hproc, void* cb_data);
+void DrawKeyboard();
 void OpenCustomKeyboard(const char *filename, const char *title, char *buffer, int maxlen, int flags, iv_keyboardhandler hproc);
 void CloseKeyboard();
 void GetKeyboardRect(irect *rect);
+irect GetKeyboardRectWithParams(char *title, char *buffer, int flags);
 int IsKeyboardOpened();
 void OpenPageSelector(iv_pageselecthandler hproc);
 void OpenTimeEdit(const char *title, int x, int y, long intime, iv_timeedithandler hproc);
@@ -1818,6 +1834,7 @@ int  DrawPanel(const ibitmap *icon, const char *text, const char *title, int per
 int  DrawPanel2(const ibitmap *icon, const char *text, const char *title, int percent, int readingModeEnable); // almost the same as DrawPanel when have 0 in readingModeEnable parameter
 int  DrawPanel3(const ibitmap *icon, int currentPage, int totalPages, int readingModeEnable); // almost the same as DrawPanel when have 0 in readingModeEnable parameter
 int  DrawPanel4(const ibitmap *icon, const char * bookName, int currentPage, int totalPages, int readingModeEnable);
+int  DrawPanel5(const ibitmap *icon, const char *text, const char *title, int percent, int readingModeEnable); // almost the same as DrawPanel2, but output text.
 int  DrawTabs(const ibitmap *icon, int current, int total);
 /**
  * @brief OpenControlPanel calls control panel application
@@ -1880,8 +1897,8 @@ void ClearConfig(iconfig *cfg);
 /**
  * @brief GetKeyMapping used to read TEXT key mapping from default config
  * @param act0 and @param act1 are are arrays of CSTtring wich look like "@KA_..." 
- * FOR EXAMPLE act0[KEY_PREV] will contain an action wich should happen when user PRESSES KEY_PREV,
- * act1[KEY_PREV] will contain an action wich should happen when user HOLS KEY_PREV,
+ * FOR EXAMPLE act0[KEY_PREV] will contain an action wich should happen when user PRESSES IV_KEY_PREV,
+ * act1[KEY_PREV] will contain an action wich should happen when user HOLS IV_KEY_PREV,
  * IMPORTANT !! pointers are not always valid, use strdup to handle it
  */
 void GetKeyMapping(const char *act0[], const char *act1[]);
@@ -1904,6 +1921,7 @@ int IsJoystickButtonsPresent();
 
 int MultitaskingSupported();
 int NewTask(const char *path, char * const args[], const char *appname, const char *name, const ibitmap *icon, unsigned int flags);
+int NewTaskEx(const char *path, char * const args[], const char *appname, const char *name, const ibitmap *icon, unsigned int flags, int run_as_reader_if_needed);
 int NewSubtask(char *name);
 int SwitchSubtask(int subtask);
 void SubtaskFinished(int subtask);
@@ -1926,7 +1944,9 @@ int SendEventSyncTo(int task, int type, int par1, int par2);
 int SendMessageTo(int task, int request, void *message, int len);
 int SetRequestListener(int request, int flags, iv_requestlistener hproc);
 int SendRequest(int request, void *data, int inlen, int outlen, int timeout);
+int SendRequestNoWait(int request, void *data, int inlen, int outlen);
 int SendRequestTo(int task, int request, void *data, int inlen, int outlen, int timeout);
+int SendRequestToNoWait(int task, int request, void *data, int inlen, int outlen);
 int SendGlobalRequest(int param);
 void SetMessageHandler(iv_msghandler hproc);
 void OpenTaskList();
@@ -1943,11 +1963,44 @@ void iv_wait_task_activation(int timeout);
  */
 void CopyActiveFb(void);
 
-/* Auto control for frontlight brigthness */
-int hw_is_frontlight_auto_supported(void);
-void hw_set_frontlight_auto_enabled(int enable);
-int hw_is_frontlight_auto(void);
-int hw_get_lux_raw(void);
+int GetFrontlightVersion(void);
+
+/*
+ * Returns frontlight state (0-100 - brightness, negative value if off)
+ * returns INT_MIN if can't read or not supported
+ */
+int GetFrontlightState(void);
+
+/*
+ * Sets frontlight state (0-100 - brightness, negative value if off)
+ */
+void SetFrontlightState(int flstate);
+
+/*
+ * Sets frontlight state (0-100 - brightness, negative value if off)
+ *   temporary for use when about to keylock and this value should not be stored
+ */
+void SetFrontlightStateEx(int flstate, int temporary);
+
+/*
+ * If supported open special application
+ */
+void OpenFrontLightConfig();
+/*
+    On/off FrontLight
+*/
+void SwitchFrontlightState();
+
+/*
+ * Returns frontlight color (0-100 - day-night)
+ * returns INT_MIN if can't read or not supported
+ */
+int GetFrontlightColor(void);
+
+/*
+ * Sets frontlight state (0-100 - day-night)
+ */
+void SetFrontlightColor(int color);
 
 // String hash functions
 
@@ -2007,6 +2060,7 @@ void Path2String(const char * path, char * string, int maxLength);
 long iv_ipc_request(long type, long attr, unsigned char *data, int inlen, int outlen);
 long iv_ipc_request_secure(long type, long param, unsigned char *data, int inlen, int outlen);
 long iv_ipc_cmd(long type, long param);
+long iv_ipc_request_with_timeout(long type, long param, unsigned char *data, int inlen, int outlen, int timeout_ms);
 
 // Language functions
 
@@ -2017,24 +2071,25 @@ void AddTranslation(const char *label, const char *trans);
 const char *GetCurrentLangText(const char *s);
 const char *GetLangText(const char *s);
 const char *GetLangTextF(const char *s, ...);
+const char *GetLangTextPlural(const char *s, int amount);
 void SetRTLBook(int rtl);
 int IsRTL();  // depends only on the system language
-int IsBookRTL();    // can be overwritten by application
+int IsBookRTL();	// can be overwritten by application
 
 //#define T(x) GetLangText(#x)
 //#define TF(x...) GetLangTextF(x)
 
 // User profile functions
 typedef struct iprofile_s {
-    char *name;
-    char *path;
-    int type;
-    ibitmap *avatar;
+	char *name;
+	char *path;
+	int type;
+	ibitmap *avatar;
 } iprofile;
 
 typedef struct iprofiles_s {
-    iprofile *profile;
-    int count;
+	iprofile *profile;
+	int count;
 } iprofiles;
 
 // Profiles functions
@@ -2085,6 +2140,7 @@ unsigned short IsResourcePresent(const char *name);
 // Book functions
 
 iv_filetype *GetSupportedFileTypes();
+int GetSupportedFileTypesLength();
 bookinfo *GetBookInfo(const char *name);
 bookinfo *GetBookInfoExt(const char *path, const char *separator);
 char *GetBookISBN(const char *path);
@@ -2180,6 +2236,17 @@ int LookupWord(const char *what, char **word, char **trans);
 int LookupWordExact(const char *what, char **word, char **trans);
 int LookupPrevious(char **word, char **trans);
 int LookupNext(char **word, char **trans);
+
+/**
+ * @brief GetWordListWithPrefix get up to maxWords words with given prefix from current dictionary.
+ *  Function is not reentrant
+ * @param prefix - prefix to find words (in utf-8)
+ * @param maxWords - maximum words to find (should not be > 255)
+ * @param wordList - resulting list of words (in utf-8), caller should not free the list
+ * @return number of words found or 0 on error
+ */
+int GetWordListWithPrefix(const char *prefix_utf8, int maxWords, char ***wordList);
+
 void OpenDictionaryView(iv_wlist *wordlist, const char *dicname);
 void OpenControlledDictionaryView(pointer_to_word_hand_t pointer_handler, iv_wlist *wordlist, const char *dicname);
 void OpenFastTranslation(pointer_to_word_hand_t pointer_handler, iv_wlist *wordlist, int pos, const char *dicname);
@@ -2237,6 +2304,7 @@ unsigned char *GetDeviceFingerprint();
 char *CurrentDateStr();
 char *DateStr(time_t t);
 int GoSleep(int ms, int deep);
+void BanSleep(int sec);
 void SetAutoPowerOff(int en);
 void PowerOff();
 int SafeMode();
@@ -2418,34 +2486,34 @@ int iv_get_obreey_status();
 
 typedef enum
 {
-    kBTInfo,
-    kBTAttention,
-    kBTWarning,
-    kBTQuestion,
-    kBTButton,
+	kBTInfo,
+	kBTAttention,
+	kBTWarning,
+	kBTQuestion,
+	kBTButton,
 } eBubbleTypes;
 
 typedef struct icustombubble_s
 {
 // bubble
-    int type;
-    irect bubble_pos;
-    irect arrow_pos;
-    ibitmap *arrow_bmp;
-    ibitmap *icon_bmp;
-// text in bubble
-    irect text_pos;
-    ifont *font;
-    char *text;
+	int type;
+	irect bubble_pos;
+	irect arrow_pos;
+	ibitmap *arrow_bmp;
+	ibitmap *icon_bmp;
+// text	in bubble
+	irect text_pos;
+	ifont *font;
+	char *text;
 } icustombubble;
 
 typedef struct icustomhero_s
 {
-    irect pos;
-    char *name;
-    ibitmap *hero_bmp;
-    int max_bubbles;
-    irect **bubbles;
+	irect pos;
+	char *name;
+	ibitmap *hero_bmp;
+	int max_bubbles;
+	irect **bubbles;
 } icustomhero;
 
 typedef void (*iv_custombubbledraw)(icustombubble *bubble);
@@ -2453,14 +2521,14 @@ typedef void (*iv_customherodraw)(icustomhero *hero);
 
 typedef struct icustomdialog_s
 {
-    int timeout;
-    int bubble_count;
-    icustombubble **bubbles;
-    icustomhero *hero;
-    iv_customherodraw hero_draw;
-    iv_custombubbledraw bubble_draw;
-    iv_dialoghandler cb_handler;
-    int cancel_enable_;
+	int timeout;
+	int bubble_count;
+	icustombubble **bubbles;
+	icustomhero *hero;
+	iv_customherodraw hero_draw;
+	iv_custombubbledraw bubble_draw;
+	iv_dialoghandler cb_handler;
+	int cancel_enable_;
 } icustomdialog;
 
 icustomdialog *CustomDialogCreate(eBubbleTypes info_bubble_type, const char *hero_name, int bubble_count);
@@ -2472,9 +2540,9 @@ void CustomDialogDestroy(icustomdialog *dialog);
 // Custom dialog // <-
 
 typedef enum proxy_type_e {
-    http = 0,
-    socks4,
-    socks5
+	http = 0,
+	socks4,
+	socks5
 } proxy_type;
 
 typedef char proxy_settings;
@@ -2594,9 +2662,9 @@ int NetSelect(const char *path);
 int NetSelect_by_ssid(const char *ssid);
 
 #define iverror(x...) do { \
-    extern char *program_invocation_name; \
-    fprintf(stderr,"[%i : %s] ",getpid(),program_invocation_name); \
-    fprintf(stderr, x); \
+	extern char *program_invocation_name; \
+	fprintf(stderr,"[%i : %s] (%s)",getpid(),program_invocation_name,__func__); \
+	fprintf(stderr, x); \
 } while(0);
 
 /*
@@ -2604,11 +2672,11 @@ int NetSelect_by_ssid(const char *ssid);
  * for different readers or apps - different cache folders
  */
 typedef enum COVERCACHE_STORAGES_e {
-    CCS_NONE        = 0,
-    CCS_ADOBE,
-    CCS_FBREADER,
-    CCS_DJVIEWER,
-    CCS_MAXSTORAGE,
+	CCS_NONE		= 0,
+	CCS_ADOBE,
+	CCS_FBREADER,
+	CCS_DJVIEWER,
+	CCS_MAXSTORAGE,
 } COVERCACHE_STORAGES;
 
 /*
@@ -2637,8 +2705,31 @@ int get_keylock();
 int is_enough_free_space();
 
 const char* get_file_extension(const char* filename);
+
+int get_screen_dpi();
+
+
+void DebugResourceBitmaps_trackBitmapCreation(const char* name, const ibitmap* bmp);
+void DebugResourceBitmaps_trackBitmapDrawing(const ibitmap* bmp, int x, int y);
+void DebugResourceBitmaps_generateReport(const char* filename);
+void DebugResourceBitmaps_trackBitmapCopy( const ibitmap* from, const ibitmap* to);
+ibitmap *CopyBitmapNoTrack(const ibitmap *bm);
+int DebugResourceBitmaps_isEnabled();
+
+
+
+#define HIGH_PRIORITY_JOB_OPEN_BOOK 1
+
+int isHighPriorityJobRunning();
+void startHighPriorityJob(int job_id, int timeout_sec); // Set high priority job status for timeout_sec
+void finishHighPriorityJob(int job_id);
+
+
+int haveDictionaryKeyboard();
+
 #ifdef __cplusplus
 }
+
 
 #endif
 

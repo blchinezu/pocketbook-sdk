@@ -148,11 +148,11 @@ void pb_set_log_file(FILE* file);
 		}\
 	}while(0)
 
-#define PB_FRETURN_VOID_IF_ASSERT(cond, val)\
+#define PB_FRETURN_VOID_IF_ASSERT(cond)\
         do{\
                 assert(!(cond)); \
                 if(cond){\
-                        PB_ERROR("Condition: \""#cond"\", return(\""#val"\")]");\
+                        PB_ERROR("Condition: \""#cond"\", return]");\
                         return ;\
                 }\
         }while(0)
@@ -347,7 +347,7 @@ void pb_set_log_file(FILE* file);
                 }\
         }while(0)
 
-void pb_print_log_argv(int log_level, const char * file_name, int line, const char *pretty_func, int argc, char ** argv);
+void pb_print_log_argv(int log_level, const char * file_name, int line, const char *pretty_func, int argc, const char * const* argv);
 #if PB_LOG_LEVEL >= PB_LOG_LEVEL_TRACE
 #define PB_TRACE_ARGV(ARGC, ARGV) pb_print_log_argv(PB_LOG_LEVEL_TRACE, __FILE__, __LINE__, __PRETTY_FUNCTION__, ARGC, ARGV)
 #else 

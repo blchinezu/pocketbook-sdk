@@ -17,8 +17,7 @@
 #endif
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 //#define IVDBG(x...) fprintf(stderr, x);
@@ -36,6 +35,8 @@ extern "C"
 #define MAXVOL 36
 #define MAXSHAREDEVENTS 128
 #define MAXUIDATA 4096
+
+#define MAXPANELANIMATIONTASKS 8
 
 #define WF_TYPE_GRAY       0
 #define WF_TYPE_BW         1
@@ -104,6 +105,7 @@ extern "C"
 #define UIQ_NPROGRESSBAR   6
 #define UIQ_UPDATE         7
 #define UIQ_EVENT_MAIN     8
+#define UIQ_OPENBOOK       9
 #define UIQ_DISMISS      127
 
 #define UIQ_IDLE           0
@@ -131,6 +133,20 @@ extern "C"
 #define INKFLAG_3BIT_WAVEFORM  0x02
 #define INKFLAG_A2PLUS         0x04
 
+#define MCU_CAPS_NOTINITED  0x80000000
+#define MCU_CAPS_FRONTLIGHT (1 << 0)
+#define MCU_CAPS_SENSOR     (1 << 1)
+
+#define IOC_MCU_PATH "/sys/class/ioc-stm32/"
+#define IOC_MCU_SENSOR_PATH IOC_MCU_PATH "sensor"
+#define IOC_MCU_FPROFILE_PATH IOC_MCU_PATH "frontlight_profile"
+#define IOC_MCU_BRIGHTNESS_PATH IOC_MCU_PATH "brightness"
+#define IOC_MCU_POWEROFF_PATH IOC_MCU_PATH "poweroff"
+#define IOC_MCU_RESET_PATH IOC_MCU_PATH "reset"
+
+#define POWER_STATE_CHARDGING	(1 << 0)
+#define POWER_STATE_FULL		(1 << 1)
+
 typedef enum EPARTNER_ID {
     PARTNER_INVALID = -1,
     PARTNER_DEFAULT = 0,
@@ -144,9 +160,15 @@ typedef enum EPARTNER_ID {
     PARTNER_EBOOKIT,
     PARTNER_EMPIK,
     PARTNER_APOLLO,
-    PARTNER_MENCA,
+    PARTNER_MENCA_,
+    PARTNER_FONA,
     PARTNER_LIBRONET,
-    PARTNER_UMBREIT
+    PARTNER_UMBREIT,
+    PARTNER_KNV,
+    PARTNER_NORLI,
+    PARTNER_BUCHMEDIA,
+    PARTNER_LEGIMI,
+    PARTNER_BUCHZENTRUM
 } PARTNER_ID;
 
 //#define DEEPSLEEPTIME 600000LL
@@ -233,9 +255,9 @@ typedef struct iv_glyph_s {
 typedef struct iv_state_s {
 
     int isopen;
-    char *theme;
-    char *lang;
-    char *kbdlang;
+    const char *theme;
+    const char *lang;
+    const char *kbdlang;
     unsigned char pwract1;
     unsigned char pwract2;
     unsigned char timeformat;
@@ -260,7 +282,7 @@ typedef struct iv_state_s {
     iconfig *cfg;
     FT_Library ftlibrary;
     ihash *fonthash;
-    ifont *current_font;
+    const ifont *current_font;
     FT_Face current_face;
     int current_color;
     int current_aa;
@@ -268,10 +290,10 @@ typedef struct iv_state_s {
     unsigned short **kerning_cache;
     iv_glyph **glyph_cache;
 
-    char *font;
-    char *fontb;
-    char *fonti;
-    char *fontbi;
+    const char *font;
+    const char *fontb;
+    const char *fonti;
+    const char *fontbi;
 
     int keylocktm;
     int powerofftm;
@@ -409,6 +431,22 @@ typedef struct hw_event_s {
     struct timeval time;
 } hw_event;
 
+typedef enum fl_mode_e {
+	FL_MODE_AUTO_BRIGHTNESS = 1,
+	FL_MODE_AUTO_COLOR = 2,
+} fl_automode_t;
+
+typedef struct hw_frontlight_s {
+	int version;
+
+	/*
+	 *  MANUAL if automode == 0 or check bitfields fl_automode_t
+	 */
+	unsigned char automode;
+	int color;
+	int brightness;
+} hw_frontlight;
+
 typedef struct iv_mpctl_s {
 
     unsigned char reserved0;
@@ -433,6 +471,8 @@ typedef struct iv_mpctl_s {
     int activesubtask;
 
     int power;
+    int power_state;
+
     int pkey;
     int vid;
 
@@ -499,7 +539,6 @@ typedef struct iv_mpctl_s {
     int uiquery;
     int uistatus;
     unsigned int uidata[MAXUIDATA];
-
 	int obreey_sync_status;
 	int messages_count; // Number of new messages to show on panel
 	int dialog_h[16];   // heights of dialog windows
@@ -533,6 +572,29 @@ typedef struct iv_mpctl_s {
 	pid_t control_panel_pid;
 	pid_t menca_pid;
     pid_t push_notification_pid;
+    pid_t reader_controller_pid;
+    pid_t db_server_pid;
+
+    int enable_timed_refresh;
+    unsigned char user_activity;
+    unsigned char reserved_14;
+    unsigned char reserved_15;
+    unsigned char reserved_16;
+
+    int panel_animation_phase;
+    long long panel_animation_auto_stop[MAXPANELANIMATIONTASKS];
+    int panel_animation_auto_pid[MAXPANELANIMATIONTASKS];
+    long long obex_transferring_id;
+    long long obex_transferred;
+    long long obex_size;
+    int menca_status;
+    int partner_change_counter;
+    pid_t netscript_start_pid;
+    unsigned long high_priority_job_start_time; // sec CLOCK_MONOTONIC
+    unsigned long high_priority_job_duration; // sec
+
+    //frontlight ver 2
+    hw_frontlight fl;
 
 } iv_mpctl;
 
@@ -575,7 +637,7 @@ struct id2code_s {
 };
 
 struct iv_img_conv {
-    void *src;
+    const void *src;
     void *dest;
     int width;
     int height;
@@ -666,6 +728,16 @@ static const struct id2code_s id2code_630[] = {
         {0,0}, //terminating entry
 };
 
+static const struct id2code_s id2code_631[] = {
+        {  61,0x10000},//home
+        { 106,0x00800},//prev
+        { 105,0x01000},//next
+        { 139,0x00008},//menu
+        { 116,0x04000},//power
+        { 59,0x1000000},//cover
+        {0,0}, //terminating entry
+};
+
 static const struct id2code_s id2code_fc613[] = {
         {0x1,0x00020},//ok
         {0x4,0x00400},//up
@@ -682,6 +754,14 @@ static const struct id2code_s id2code_840[] = {
         { 158,0x01000},//prev
         {  28,0x00800},//next
         { 116,0x04000},//power
+        {0,0}, //terminating entry
+};
+
+static const struct id2code_s id2code_641[] = {
+        { 108,0x10000},//home
+        { 102,0x01000},//prev
+        { 158,0x00800},//next
+        { 116,0x04000},//menu/power
         {0,0}, //terminating entry
 };
 
@@ -797,6 +877,7 @@ void hw_usbhostpower(int n);
 int hw_power();
 int hw_temperature();
 int hw_sleep(int ms, int deep);
+void hw_ban_suspend(int sec);
 time_t hw_gettime();
 long long hw_timeinms();
 void hw_setalarm(int ms);
@@ -817,6 +898,7 @@ char *hw_getbtmac();
 char *hw_get3gimei();
 int hw_geta2dpstatus(void);
 int hw_writelogo(const ibitmap *bm, int permanent);
+void hw_show_poweroff_logo();
 int hw_restorelogo();
 int hw_usbready();
 void hw_usblink();
@@ -834,6 +916,7 @@ unsigned char *hw_calibrate_gsensor();
 void hw_adjust_gsensor(unsigned char *data);
 int hw_captouch_ready();
 int hw_read_captouch();
+int hw_sd_mounted();
 int hw_flash_mounted();
 int has_secure_storage();
 void hw_winmessage(char *title, char *text, int flags);
@@ -876,9 +959,38 @@ int hw_hidstatus(void);
 char **hw_enum_btdevices();
 char **hw_enum_wireless();
 int hw_get_btservice(const char *mac, const char *service);
-int hw_net_connect(const char *name, int silent); // silent to suppress screen output
+int hw_net_connect(const char *name, int silent, int showHourGlass); // silent to suppress screen output
 int hw_net_disconnect();
 iv_netinfo *hw_net_info();
+NET_STATE hw_get_current_network_state (void);
+
+int hw_netmgr(int status);
+/*
+ * Returns netmgr pid.
+ */
+int hw_netmgr_status();
+/*
+ * Returns list of currently known networks in old network config format.
+ * @path saving config path.
+ */
+int hw_netlist(const char *path);
+/*
+ * Adds network configured in old network config format.
+ * ssid might be preset in string like \"name\" or hex format
+ * key might be preset in string like \"key\" or wpa_passphrase format
+ */
+int hw_netadd(const char *path);
+int hw_netdel(const char *path);
+int hw_netdel_by_ssid(const char *ssid);
+/*
+ * Selects to connect already known network.
+ */
+int hw_netsel(const char *path);
+/*
+ * Selects to connect already known network.
+ */
+int hw_netsel_by_ssid(const char *ssid);
+
 void hw_uiclear();
 int hw_uiquery();
 void hw_uiresponse(int status, char *data);
@@ -901,7 +1013,7 @@ void hw_mp_getequalizer(int *eq);
 void iv_check_player_state_change();
 
 void *hw_task_checkmessages(int *replyaddr, int *type, int *param, int *size);
-int hw_task_register(char *appname, char *name, ibitmap *icon, unsigned int flags);
+int hw_task_register(const char *appname, const char *name, const ibitmap *icon, unsigned int flags);
 int hw_task_newsubtask(char *name);
 int hw_task_switchsubtask(int subtask);
 void hw_task_subtaskfinished(int subtask);
@@ -912,23 +1024,44 @@ int hw_task_previous_instack(int *task, int *subtask);
 taskinfo *hw_task_info(int task);
 int hw_task_findbybook(char *name, int *task, int *subtask);
 int hw_task_findbyappname(char *name);
-int hw_task_setparameters(int task, char *appname, char *name, ibitmap *icon, unsigned int flags);
-int hw_task_setsubtaskinfo(int task, int subtask, char *name, char *book);
+int hw_task_setparameters(int task, const char *appname, const char *name, const ibitmap *icon, unsigned int flags);
+int hw_task_setsubtaskinfo(int task, int subtask, const char *name, const char *book);
 int hw_task_foreground(int task, int subtask);
+int hw_task_foreground_with_timeout(int task, int subtask, int timeout);
+
 void hw_task_background();
 void hw_task_close(int task, int subtask, int force);
 int hw_task_sendevent(int task, int hdest, int type, int par1, int par2);
 int hw_task_sendevent_sync(int task, int hdest, int type, int par1, int par2);
 int hw_task_message(int task, void *message, int len);
-int hw_task_sendrequest(int task, int req, void *data, int inlen, int outlen, int timeout);
+int hw_task_sendrequest(int task, int req, void *data, int inlen, int outlen, int timeout, int nowait);
 int hw_task_setrequestlistener(int req, int flags);
 int hw_task_inrequest();
 icanvas *hw_gettaskfb(taskinfo *ti);
 iv_fbinfo *hw_gettaskfbinfo(taskinfo *ti);
 void hw_releasetaskfb(icanvas *fb);
 
+/* Auto control for frontlight brigthness */
+int hw_is_frontlight_auto_supported(void);
+void hw_set_frontlight_auto_enabled(int enable);
+int hw_is_frontlight_auto(void);
+int hw_is_frontlight_color_supported(void);
+void hw_set_frontlight_color_auto_enabled(int enable);
+int hw_is_frontlight_color_auto(void);
+int hw_get_lux_raw(void);
+
 int hw_get_frontlight_state(void);
 void hw_set_frontlight_state(int flstate, int previous);
+
+// color set from 0 to 100
+int hw_get_frontlight_color(void);
+void hw_set_frontlight_color(int color);
+
+unsigned int hw_get_mcu_capabilities(void);
+int hw_is_timed_refresh_enabled(void);
+void hw_mcu_go_standby(void);
+void hw_mcu_reset(void);
+
 
 void iv_extend_wtime(long long t);
 iv_handler iv_seteventhandler(iv_handler hproc);
@@ -936,17 +1069,17 @@ iv_handler iv_restoreeventhandler(iv_handler hproc, int keytm1, int keytm2);
 void iv_enqueue(iv_handler hproc, int type, int par1, int par2);
 long long iv_get_first_timer();
 void iv_process_timers();
-char **iv_enum_files(char ***list, char *path1, char *path2, char *path3, char *extension, int dropext);
+char **iv_enum_files(char ***list, const char *path1, const char *path2, const char *path3, const char *extension, int dropext);
 int iv_enum_dictionaries(char ***p_dlist, char ***p_fnlist, int onlysystem, int showhidden);
 void iv_drawsymbol(int x, int y, int size, int symbol, int color);
-irect *iv_windowframe(int x, int y, int w, int h, int bordercolor, int windowcolor, char *title, int button);
+irect *iv_windowframe(int x, int y, int w, int h, int bordercolor, int windowcolor, const char *title, int button);
 void iv_scrollbar(int x, int y, int w, int h, int percent);
 int iv_textblock(int x, int y, int w, unsigned short *p, int len, int color, int angle, int rtlbase);
 void iv_stretch(const unsigned char *src, int format, int sx, int sy, int sw, int sh, int srclw,
         int dx, int dy, int dw, int dh, int flags, const unsigned char *mask, int masklw);
 void iv_area(int dstx, int dsty, int width, int height,
-        unsigned char *pixels, int srclw,
-        unsigned char *mask, int masklw,
+        const unsigned char *pixels, int srclw,
+        const unsigned char *mask, int masklw,
         int srcx, int srcy, int depth);
 void iv_draw_hourglass_frame(int x, int y, int frame, int pure);
 int iv_msgtop();
@@ -958,13 +1091,13 @@ int iv_player_handler(int type, int par1, int par2);
 void iv_setsoftupdate();
 void iv_actualize_panel(int update);
 void iv_update_panel(int with_time);
-int iv_panelevent(int x, int y, int *type, int *par1, int *par2);
+int iv_panelevent(int type, int x, int y) ;
 void iv_update_orientation(int isexternal);
 void iv_check_gsensor();
 int iv_transform_key(int key);
 void iv_keyswitch_rtl(int *par);
-void iv_getkeymapping(int what, char *act0[], char *act1[], int count);
-void iv_getglobalkeymapping(char *act0[], char *act1[], int count);
+void iv_getkeymapping(int what, const char *act0[], const char *act1[], int count);
+void iv_getglobalkeymapping(const char *act0[], const char *act1[], int count);
 void iv_rise_poweroff_timer();
 void iv_key_timer();
 void iv_poweroff_timer();
@@ -975,7 +1108,7 @@ void iv_setup_touchpanel();
 void hw_ts_default(int *a, int *b, int *c, int *d, int *e, int *f, int *nx, int *ny);
 int iv_transform_pointer(hw_event *);
 void iv_setup_gsensor();
-char *iv_shortpower_action(int times);
+const char *iv_shortpower_action(int times);
 int iv_init_profiles();
 int iv_use_profiles(int nocache);
 int iv_switch_profile(const char *name);
@@ -1079,42 +1212,26 @@ const char *GetDeviceID(void);
 PARTNER_ID GetCustomizedPartner(void);
 
 /*
+const char* GetCustomizedPartnerName()
+- return lowercase name of partner or "PocketBook"
+*/
+const char* GetCustomizedPartnerName();
+
+/*
+ * Returns native auth flag
+ */
+int IsPartnerSupportNativeAuth();
+
+/*
+ * Returns auto registration to cloud with store credentials flag
+ */
+int IsEnabledAutoRegistrationToCloud();
+
+/*
  * Signals to monitor task started and initialized
  */
 void SignalTaskStarted(void);
 
-/*
- * Returns frontlight state (0-100 - brightness, negative value if off)
- * returns INT_MIN if can't read or not supported
- */
-int GetFrontlightState(void);
-
-/*
- * Sets frontlight state (0-100 - brightness, negative value if off)
- */
-void SetFrontlightState(int flstate);
-
-/*
- * MANUALLY ADDED - zelenukhin@mobileread dug and found these things exists in the compiled library of FW5.17 in his Touch HD 2
- */
-
-int GetFrontlightColor(void);
-void SetFrontlightColor(int flcolor);
-
-/*
- * Sets frontlight state (0-100 - brightness, negative value if off)
- *   temporary for use when about to keylock and this value should not be stored
- */
-void SetFrontlightStateEx(int flstate, int temporary);
-
-/*
- * If supported open special application
- */
-void OpenFrontLightConfig();
-/*
-	On/off FrontLight
-*/
-void SwitchFrontlightState();
 /*
  * Sets drag dead zone in square pixels (i.e. for 20 px drag zone pass 20*20=400 as argument)
  */
@@ -1129,7 +1246,7 @@ unsigned int GetTouchDragDeadZone(void);
 ibitmap *bm_make(unsigned char *bmdata, int w, int h);
 void bm_dither(unsigned char *data, int sx, int sy, int w, int h, int lw, int levels);
 
-int hw_ussdquery(char *ussd, char **msg);
+int hw_ussdquery(const char *ussd, char **msg);
 
 /*
  * Check if battery is full by using kernel information if supported or battery SOC if not
@@ -1167,6 +1284,22 @@ void iv_gs4_to_gs(struct iv_img_conv *c);
  */
 void iv_gs_to_gs(struct iv_img_conv *c);
 
+//BT client functionality
+bt_service_obj *bt_service_init_input(int id);
+int bt_service_cancel_input(bt_service_obj *);
+int bt_service_close_input(bt_service_obj *);
+enum bt_service_e bt_service_get_type(bt_service_obj *obj);
+
+//BT OBEX service
+enum obex_status_e obex_get_status(bt_service_obj *);
+char *obex_get_filename(bt_service_obj *);
+char *obex_get_filepath(bt_service_obj *);
+char *obex_get_description(bt_service_obj *);
+char *obex_get_mimetype(bt_service_obj *);
+long obex_get_filesize(bt_service_obj *);
+int obex_set_auth(bt_service_obj *, int auth, char *new_filename, char *new_filepath);
+enum obex_status_e obex_get_transfer(bt_service_obj *,long *transferred, long *total);
+int hw_init_shm();
 
 #ifdef __cplusplus
 }
