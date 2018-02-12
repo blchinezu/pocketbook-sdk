@@ -1095,6 +1095,13 @@ int GetFrontlightState(void);
 void SetFrontlightState(int flstate);
 
 /*
+ * MANUALLY ADDED - zelenukhin@mobileread dug and found these things exists in the compiled library of FW5.17 in his Touch HD 2
+ */
+
+int GetFrontlightColor(void);
+void SetFrontlightColor(int flcolor);
+
+/*
  * Sets frontlight state (0-100 - brightness, negative value if off)
  *   temporary for use when about to keylock and this value should not be stored
  */
